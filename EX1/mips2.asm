@@ -1,7 +1,7 @@
 #Inicializando os registradores.
 
-li $t0, 4
-li $t1, 5
+li $t0, 5
+li $t1, 4
 li $t2, 1	# $t2 = TRUE
 
 slt $t8, $t0, $t1	#Checha se $t1 > $t0.

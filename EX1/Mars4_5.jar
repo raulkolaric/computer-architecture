@@ -1,0 +1,17 @@
+li $t0, 8 # inicializa o x com o valor 8
+li $t1, 4 # inicializa o y com o valor 4
+li $t2, 0 # inicializa o i com o valor 0
+
+
+# performando o loop while(i < 3) { y = y + x; i = i + 1;} z = x + y;
+
+Loop: add $t1, $t1, $t0 # y = y + x
+addi $t2, $t2, 1 # i++
+slti $t3, $t2, 3 # bool t3 = t2 < 3 ? 1 : 0
+bne $t3, $zero, Loop # if ($t3 != $zero) goto Loop
+
+# performando a soma z = x + y;
+#sendo z = t5
+
+add $t5, $t0, $t1 # z = x + y;
+ 

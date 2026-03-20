@@ -1,3 +1,5 @@
+#Raul Kolaric RA00359586
+#Igor Simões RA00360505
 #Recebe o RA
 #Soma todos os dígitos do RA
 #RA00359586

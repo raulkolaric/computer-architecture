@@ -1,3 +1,6 @@
+#Raul Kolaric RA00359586
+#Igor Simões RA00360505
+#código em assembly do MIPS que ,dados dois números armazenados em t0 e t1, armazenando menor em t5 e o maior em t6.
 #Inicializando os registradores.
 
 li $t0, 5

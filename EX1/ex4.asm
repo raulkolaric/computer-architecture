@@ -1,7 +1,9 @@
+#Raul Kolaric RA00359586
+#Igor Simões RA00360505
+
 li $t0, 8 # inicializa o x com o valor 8
 li $t1, 4 # inicializa o y com o valor 4
 li $t2, 0 # inicializa o i com o valor 0
-
 
 # performando o loop while(i < 3) { y = y + x; i = i + 1;} z = x + y;
 

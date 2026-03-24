@@ -1,5 +1,4 @@
-# Computer Architecture (Arquitetura de Computadores)
-
+# Computer Architecture
 This repository contains exercises and labs for the Computer Architecture course, focused on understanding how processors manage data, instructions, and memory at a low level.
 
 ## Subjects Covered

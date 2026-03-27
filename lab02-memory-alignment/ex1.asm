@@ -1,5 +1,6 @@
 #Raul Kolaric RA00359586
 #Igor Simões RA00360505
+#Rodrigo Ward RA00359800
 
 #RA usado = RA00359586
 

@@ -1,1 +1,6 @@
-.
+#29/03/2026
+
+#Raul Kolaric RA00359586
+#Igor Simões RA00360505
+#Rodrigo Ward RA00359800
+

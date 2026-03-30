@@ -32,7 +32,8 @@ LOOP:
 
     # Faz a divisao do numero pelo divisor atual
     div $t0, $t1                # Divide $t0 por $t1
-    mfhi $t2                    # Pega o resto da divisao (fica no registrador HI) e joga em $t2
+    mfhi $t2                    # Pega o resto da divisao (fica no registrador HI) e joga em $t2 
+#Nao sei se podemos usar essa instrucao acima, ela disse a respeito da instrucao resto so no 3 exercicio 
 
     # Se o resto ($t2) for igual a zero, o numero e divisivel, entao nao e primo
     beq $t2, $zero, NAO_PRIMO   

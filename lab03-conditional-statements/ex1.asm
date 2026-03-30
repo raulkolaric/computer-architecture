@@ -1,52 +1,51 @@
-#29/03/2026
+# Exemplo de codigo que apresenta mensagens ao usuario e recebe um numero inteiro
+# Toda a interacao com o usuario e feita atraves de chamadas de sistema (syscalls)
+# As chamadas de sistema sao selecionadas com base no valor armazenado no registrador v0
+# onde para cada valor existe uma chamada de sistem diferente
+# As chamadas de sistema utilizadas aqui sao:
 
-#Raul Kolaric RA00359586
-#Igor Simões RA00360505
-#Rodrigo Ward RA00359800
+# 1 - Apresenta um inteiro ao usuario
+# 4 - Apresenta uma string ao usuraio
+# 5 - Recebe um numero inteiro do usuario
 
-.data
-    prompt: .asciiz "Digite o valor de radiacao (inteiro positivo): "
+.data 
+  prompt:	.asciiz "Digite o valor da radiacao: "
 
 .text
-main:
-    # Exibe a mensagem pedindo o valor para o usuario
-    addi $v0, $zero, 4          # Prepara o syscall 4 (print string)
-    la $a0, prompt              # Carrega o endereco da string 'prompt' em $a0
-    syscall                     # Executa a chamada do sistema
+		
+# Apresentacao da primeira mensagem (syscall codigo 4)		
+addi $v0, $zero, 4  	# v0 = 4		
+la $a0, prompt		# a0 recebe a mensagem
+syscall      			
 
-    # Le o numero inteiro digitado pelo usuario
-    addi $v0, $zero, 5          # Prepara o syscall 5 (read integer)
-    syscall                     # Executa a chamada do sistema
-    add $t0, $zero, $v0         # Move o valor lido de $v0 para o registrador temporario $t0
+# Recebe o valor da radiacao em v0 (syscall codigo 5)
+addi $v0, $zero, 5	# v0 = 5
+syscall
 
-    # Logica de Classificacao:
-    # Tipo 1: 1 a 30 (inclusos) -> $t5 = 1
-    # Tipo 2: 31 a 79 (inclusos) -> $t5 = 2
-    # Tipo 3: >= 80 -> $t5 = 3
+# v0 vai receber o valor da radiacao do usuario
+      
+# Move o inteiro recebido de v0 para t0
+add $t0, $v0, $zero	# t0 = v0 + $zero
 
-    # Verifica se eh Tipo 1 (Valor < 31)
-    addi $t1, $zero, 31         # Coloca o limite 31 em $t1 para comparar
-    slt $t2, $t0, $t1           # Se o valor digitado ($t0) for menor que 31, $t2 recebe 1
-    bne $t2, $zero, CLAS_TIPO1  # Se $t2 for 1 (verdade), pula para a etiqueta CLAS_TIPO1
+#verifica se a radiacao digitada pertence ao tipo 1
 
-    # Verifica se eh Tipo 2 (Valor < 80)
-    addi $t1, $zero, 80         # Coloca o limite 80 em $t1 para comparar
-    slt $t2, $t0, $t1           # Se o valor digitado ($t0) for menor que 80, $t2 recebe 1
-    bne $t2, $zero, CLAS_TIPO2  # Se $t2 for 1 (verdade), pula para a etiqueta CLAS_TIPO2
+slti $t1, $t0, 31 # realiza a seguinte expressao ternaria t1 = t0 < 31 ? 1 : 0
+beq $t1, $zero, MaiorQueOuIgualA31 # ramifica para a verificacao do tipo 2
+addi $t5, $zero, 1 # adiciona 1 ao t5 
+j End # pula para o fim do programa
 
-    # Caso nao seja nem Tipo 1 nem Tipo 2, sobra o Tipo 3
-    addi $t5, $zero, 3          # Armazena o numero 3 em $t5 (Tipo 3)
-    j FIM                       # Pula para o final do programa
 
-CLAS_TIPO1:
-    addi $t5, $zero, 1          # Armazena o numero 1 em $t5 (Tipo 1)
-    j FIM                       # Pula para o final do programa
+#verifica se a radaicao digitada pertence ao tipo 2
 
-CLAS_TIPO2:
-    addi $t5, $zero, 2          # Armazena o numero 2 em $t5 (Tipo 2)
-    j FIM                       # Pula para o final do programa
+MaiorQueOuIgualA31: slti $t1, $t0, 80 # realiza a seguinte expressao ternaria t1 = t0 < 80 ? 1 : 0
+beq $t1, $zero, MaiorQueOuIgualA80 # ramifica para tipo 3
+addi $t5, $zero, 2 # adiciona 2 ao t5 
+j End # pula para o fim do programa
 
-FIM:
-    # Encerra a execucao do programa
-    addi $v0, $zero, 10         # Codigo syscall 10 para sair (exit)
-    syscall                     # Chama o sistema para finalizar
+#numero digitado pertence ao tipo 3 de radiacao
+
+MaiorQueOuIgualA80: addi $t5, $zero, 3 # adiciona 3 ao t5
+
+End:
+
+

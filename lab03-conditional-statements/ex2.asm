@@ -1,61 +1,76 @@
-#29/03/2026
+# Toda a interacao com o usuario e feita atraves de chamadas de sistema (syscalls)
+# As chamadas de sistema sao selecionadas com base no valor armazenado no registrador v0
+# onde para cada valor existe uma chamada de sistem diferente
+# As chamadas de sistema utilizadas aqui sao:
 
-#Raul Kolaric RA00359586
-#Igor Sim√µes RA00360505
-#Rodrigo Ward RA00359800
+# 1 - Apresenta um inteiro ao usuario
+# 4 - Apresenta uma string ao usuraio
+# 5 - Recebe um numero inteiro do usuario
 
 .data
-    prompt: .asciiz "Digite um numero inteiro (maior que 1): "
-    msg_primo: .asciiz "Primo"
-    msg_nao_primo: .asciiz "Nao e Primo"
-
+    prompt: .asciiz "Insira um numero inteiro positivo: "
+    messageEPrimo: .asciiz "\nPrimo"
+    messageNaoEPrimo: .asciiz "\nNao e Primo"
 .text
-main:
-    # Exibe a mensagem pedindo o numero para o usuario
-    addi $v0, $zero, 4          # Prepara o syscall 4 (print string)
-    la $a0, prompt              # Carrega o endereco da mensagem em $a0
-    syscall                     # Executa a chamada do sistema
 
-    # Le o numero digitado
-    addi $v0, $zero, 5          # Prepara o syscall 5 (read integer)
-    syscall                     # Executa a chamada do sistema
-    add $t0, $zero, $v0         # Move o numero lido para o registrador $t0
+#apresentacao do prompt para o usuario, syscall codigo 4
 
-    # Para saber se e primo, vamos tentar dividir o numero ($t0)
-    # por todos os valores comecando de 2 ate chegar no proprio numero.
-    addi $t1, $zero, 2          # Inicia o divisor em 2 (guarda em $t1)
+li $v0, 4 # carrega o 4 em v0, ou seja, v0 = 4
+la $a0, prompt #carrega a mensaagem do prompt em a0
+syscall 
 
-LOOP:
-    # Se o divisor ($t1) for igual ao numero ($t0), significa que testamos todos
-    # e nenhum dividiu certinho, logo o numero e primo.
-    beq $t1, $t0, EH_PRIMO      
 
-    # Faz a divisao do numero pelo divisor atual
-    div $t0, $t1                # Divide $t0 por $t1
-    mfhi $t2                    # Pega o resto da divisao (fica no registrador HI) e joga em $t2
+#faza requisicao do numero para o usuario, syscall codigo 5
 
-    # Se o resto ($t2) for igual a zero, o numero e divisivel, entao nao e primo
-    beq $t2, $zero, NAO_PRIMO   
+li $v0, 5 # a0 = 5
+syscall
 
-    # Se ainda nao dividiu, aumenta o divisor em 1 e volta para o loop
-    addi $t1, $t1, 1            # Incrementa o divisor ($t1 = $t1 + 1)
-    j LOOP                      # Pula de volta para o inicio do LOOP
+# v0 recebera o valor digitado pelo usuario 
 
-EH_PRIMO:
-    # Se o programa chegar aqui, imprime a mensagem de que e primo
-    addi $v0, $zero, 4          # Prepara o syscall 4 (print string)
-    la $a0, msg_primo           # Carrega a mensagem "Primo"
-    syscall                     # Executa a chamada do sistema
-    j FIM                       # Pula para o final do programa
+beq $v0, 2, EPrimo # se v0 == 2 entao vai para EPrimo
 
-NAO_PRIMO:
-    # Se o programa chegar aqui, imprime a mensagem de que nao eh primo
-    addi $v0, $zero, 4          # Prepara o syscall 4 (print string)
-    la $a0, msg_nao_primo       # Carrega a mensagem "Nao e Primo"
-    syscall                     # Executa a chamada do sistema
-    j FIM                       # Pula para o final do programa
+add $t0, $v0, $zero # t0 = v0 + $zero
 
-FIM:
-    # Encerra a execucao do programa
-    addi $v0, $zero, 10         # Codigo syscall 10 para sair (exit)
-    syscall                     # Chama o sistema para finalizar
+add $t1, $t0, $zero # t1 = t0 + $zero
+
+srl $t1, $t1, 1 # faz o deslocamento logico de 1 para a direita, ou seja, faz a divisao por 2 em binario
+	        # isso e feito para que o numero de tentativas seja reduzido para a metade para acharmos se o numero e primo
+
+#loop para descobrir se e primo
+
+li $t2, 2 # primeiro numero a ser testado para determinar o primo
+
+Loop:   # testar os numeros de 2 ate t1 se dividem t0
+
+#obtem o resto da divisao e armazena em t3
+add $t3, $t0, $zero # t3 = t0 + $zero
+Resto: sub $t3, $t3, $t2 # t3 È o resto, portanto, t3 = t3 - Divisor(t2)
+slt $t4, $t2, $t3 # t4 = Divisor (t2) < Resto(t3) ? 1 : 0
+bne $t4, $zero, Resto # if t4 != 0 goto Resto 
+beq $t3, $t2, Resto #if t3 == t2 goto Resto
+
+beq $t3, $zero, NaoEPrimo # if t3 == 0 
+
+slt $t4, $t2, $t1 # t4 = t2 < t1 ? 1 : 0
+
+beq $t4, $zero, EPrimo # if t4 == 0 goto messageEPrimo
+
+addi $t2, $t2, 1 # acrescenta 1  para seguir com o teste do loop 
+
+
+j Loop # volta para continuar o teste com t2++
+
+NaoEPrimo: # Apresentacao da primeira mensagem (syscall codigo 4)		
+addi $v0, $zero, 4  	# v0 = 4		
+la $a0, messageNaoEPrimo		# a0 recebe a mensagem
+syscall
+j End    # vai para o fim do programa  			
+
+EPrimo: # Apresentacao da primeira mensagem (syscall codigo 4)		
+addi $v0, $zero, 4  	# v0 = 4		
+la $a0, messageEPrimo		# a0 recebe a mensagem
+syscall 
+j End # vai para o fim do programa
+
+End:    			
+

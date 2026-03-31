@@ -5,6 +5,7 @@ This repository contains exercises and labs for the Computer Architecture course
 - **MIPS Assembly**: Writing and debugging assembly code for the MIPS architecture.
 - **Register Operations**: Manipulation of processor registers ($t0-$t9, $s0-$s7, etc.) for arithmetic and logical operations.
 - **Memory Alignment**: Understanding how data is stored in memory and the importance of word alignment.
+- **Control Flow**: Using conditional branches, syscalls for user I/O, and iterative loops with jump instructions.
 
 ## What is MIPS?
 **MIPS** (Microprocessor without Interlocked Pipelined Stages) is a **RISC** (Reduced Instruction Set Computer) instruction set architecture (ISA). It is widely used in academic settings to teach computer architecture because of its clean, logical design and its focus on efficiency through simplicity.
@@ -35,3 +36,4 @@ java -jar Mars4_5.jar <path_to_file.asm>
 ## Repository Structure
 - `lab01-registers/`: Introduction to MIPS registers and basic arithmetic.
 - `lab02-memory-alignment/`: Exercises on memory access and data alignment.
+- `lab03-conditional-statements/`: Programs using syscalls for user I/O, conditional branching (`beq`, `bne`, `slti`), and iterative loops with jump instructions.
